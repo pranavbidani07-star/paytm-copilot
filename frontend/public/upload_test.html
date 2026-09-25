@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head><meta charset="UTF-8"><title>Upload Test</title></head>
+<body>
+  <h2>Khatabook Upload Test</h2>
+  <input type="file" id="test-upload" accept=".json" />
+  <p id="status">Select a JSON file to test...</p>
+  <script>
+    document.getElementById('test-upload').addEventListener('change', async function(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      const status = document.getElementById('status');
+      status.textContent = 'Reading file: ' + file.name;
+      const reader = new FileReader();
+      reader.onload = async function(ev) {
+        try {
+          const json = JSON.parse(ev.target.result);
+          status.textContent = 'Parsed JSON. Sending to backend...';
+          const res = await fetch('http://127.0.0.1:8000/api/inventory/sync', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(json)
+          });
+          const data = await res.json();
+          status.textContent = 'SUCCESS: ' + JSON.stringify(data);
+          status.style.color = 'green';
+        } catch(err) {
+          status.textContent = 'ERROR: ' + err.message;
+          status.style.color = 'red';
+          console.error(err);
+        }
+      };
+      reader.readAsText(file);
+    });
+  </script>
+<script src="i18n.js"></script>
+</body>
+</html>

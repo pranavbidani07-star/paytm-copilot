@@ -1,0 +1,616 @@
+﻿<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"><meta content="mobile_tab" name="shell-type"><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"><link href="https://fonts.googleapis.com" rel="preconnect"><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"><link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@600;700&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "inverse-surface": "#22304e", "surface-container": "#e9edff", "surface-container-high": "#e1e8ff", "on-primary-fixed-variant": "#224585", "surface-container-lowest": "#ffffff", "surface-variant": "#d8e2ff", "secondary": "#006686", "on-background": "#0b1b38", "on-primary-fixed": "#001943", "secondary-fixed-dim": "#71d2ff", "secondary-container": "#2bc6ff", "outline-variant": "#c4c6d2", "inverse-on-surface": "#edf0ff", "on-secondary-fixed-variant": "#004d66", "tertiary-container": "#003923", "on-secondary": "#ffffff", "surface-bright": "#faf9ff", "error-container": "#ffdad6", "surface-dim": "#ccdaff", "surface-tint": "#3d5d9e", "on-surface-variant": "#434750", "on-tertiary": "#ffffff", "on-tertiary-fixed-variant": "#005233", "primary": "#001a45", "outline": "#747781", "secondary-fixed": "#c0e8ff", "surface-container-low": "#f1f3ff", "tertiary-fixed-dim": "#53de9e", "primary-container": "#002e6e", "on-surface": "#0b1b38", "on-tertiary-fixed": "#002112", "surface": "#faf9ff", "on-error-container": "#93000a", "on-primary-container": "#7998de", "on-secondary-container": "#004f69", "primary-fixed-dim": "#afc6ff", "on-primary": "#ffffff", "on-secondary-fixed": "#001e2b", "error": "#ba1a1a", "on-tertiary-container": "#00ae73", "background": "#faf9ff", "tertiary": "#002112", "on-error": "#ffffff", "primary-fixed": "#d9e2ff", "tertiary-fixed": "#73fbb8", "surface-container-highest": "#d8e2ff", "inverse-primary": "#afc6ff" }, "borderRadius": { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, "spacing": { "space-xl": "2rem", "margin-tablet": "1.5rem", "gutter-desktop": "1.5rem", "space-2xs": "0.25rem", "space-xs": "0.5rem", "margin-desktop": "2.5rem", "space-lg": "1.5rem", "space-md": "1rem", "gutter": "1rem", "margin": "1rem", "space-sm": "0.75rem", "space-2xl": "3rem" }, "fontFamily": { "headline-md": ["Plus Jakarta Sans"], "display-currency-mobile": ["Plus Jakarta Sans"], "body-lg": ["Plus Jakarta Sans"], "display-currency": ["Plus Jakarta Sans"], "headline-lg-mobile": ["Plus Jakarta Sans"], "label-caps": ["JetBrains Mono"], "data-mono-num": ["JetBrains Mono"], "headline-lg": ["Plus Jakarta Sans"], "headline-sm": ["Plus Jakarta Sans"], "body-md": ["Plus Jakarta Sans"], "body-sm": ["Plus Jakarta Sans"] }, "fontSize": { "headline-md": ["20px", {"lineHeight": "28px", "letterSpacing": "-0.01em", "fontWeight": "600"}], "display-currency-mobile": ["30px", {"lineHeight": "36px", "letterSpacing": "-0.02em", "fontWeight": "800"}], "body-lg": ["16px", {"lineHeight": "24px", "letterSpacing": "-0.01em", "fontWeight": "400"}], "display-currency": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.03em", "fontWeight": "800"}], "headline-lg-mobile": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "700"}], "label-caps": ["11px", {"lineHeight": "14px", "letterSpacing": "0.06em", "fontWeight": "700"}], "data-mono-num": ["14px", {"lineHeight": "20px", "letterSpacing": "-0.02em", "fontWeight": "600"}], "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}], "headline-sm": ["16px", {"lineHeight": "24px", "letterSpacing": "0em", "fontWeight": "600"}], "body-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0em", "fontWeight": "400"}], "body-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0em", "fontWeight": "500"}] } } } }</script><style>@layer base{html,body{width:100%;margin:0;padding:0;min-height:100%;}body{overscroll-behavior-y:none;-webkit-tap-highlight-color:transparent;}.pb-safe{padding-bottom:env(safe-area-inset-bottom,0px);}.pt-safe{padding-top:env(safe-area-inset-top,0px);}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style></head><body class="bg-[#F4F6F9] text-on-surface font-body-md flex flex-col min-h-screen antialiased"><header class="fixed top-0 w-full z-50 bg-[#002E6E] shadow-[0_4px_20px_rgba(0,46,110,0.18)] pt-safe"><div class="h-14 px-margin flex items-center justify-between gap-space-sm"><div class="flex items-center gap-space-xs"><button aria-label="Navigation menu" class="w-11 h-11 flex items-center justify-center rounded-full text-on-primary hover:bg-white/10 active:scale-95 transition-all" type="button"><span class="material-symbols-outlined text-[24px]">menu</span></button></div><div class="flex items-center justify-center flex-1"><h1 class="font-headline-md text-headline-md text-white font-bold tracking-tight text-center select-none">Passbook</h1></div><div class="flex items-center gap-space-2xs"><input type="file" id="json-upload" accept=".json" style="display: none;" /><button onclick="document.getElementById('json-upload').click()" class="bg-blue-50 text-blue-600 px-3 py-1 rounded-full text-sm font-semibold flex items-center gap-2">
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+    <polyline points="17 8 12 3 7 8"/>
+    <line x1="12" x2="12" y1="3" y2="15"/>
+  </svg>
+  Upload JSON
+</button><button aria-label="Notifications" class="relative w-11 h-11 flex items-center justify-center rounded-full text-on-primary hover:bg-white/10 active:scale-95 transition-all" type="button"><span class="material-symbols-outlined text-[24px]">notifications</span><span class="absolute top-2.5 right-2.5 w-2.5 h-2.5 rounded-full bg-error ring-2 ring-primary-container"></span></button></div></div></header><main class="flex flex-col relative w-full pt-14 pb-28 bg-[#F4F6F9] min-h-screen"><div class="flex flex-col w-full px-margin space-y-space-md">
+
+<!-- Net Settlement Card -->
+
+<section class="w-full bg-surface-container-lowest rounded-xl shadow-md p-space-md flex flex-col space-y-space-md"><div class="flex items-center justify-between">
+
+<div class="flex items-center space-x-space-xs">
+
+<div class="w-8 h-8 rounded-full bg-secondary-container/20 flex items-center justify-center text-primary-container">
+
+<span class="material-symbols-outlined text-[18px]">account_balance_wallet</span>
+
+</div>
+
+<div>
+
+<span class="font-label-caps text-label-caps uppercase text-on-surface-variant block">SETTLEMENT SUMMARY</span>
+
+<span class="font-body-sm text-body-sm text-on-surface-variant">Cycle: Daily Auto-Sweep</span>
+
+</div>
+
+</div>
+
+
+
+</div>
+
+<div class="flex flex-col space-y-space-2xs bg-surface-container-low rounded-lg p-space-sm">
+
+<div class="flex items-baseline justify-between">
+
+<span class="font-body-sm text-body-sm text-on-surface-variant">Net Settled to Bank</span>
+
+<div class="flex items-center space-x-1">
+
+<span class="material-symbols-outlined text-on-tertiary-container text-[16px]">verified</span>
+
+<span class="font-body-sm text-body-sm text-on-tertiary-container font-semibold">Bank Account •• 0000</span>
+
+</div>
+
+</div>
+
+<div class="flex items-baseline space-x-space-2xs">
+
+<span id="netSettledAmount" class="font-display-currency-mobile text-display-currency-mobile text-primary font-bold">₹0</span>
+
+<span class="font-data-mono-num text-data-mono-num text-on-surface-variant">.00</span>
+
+</div>
+
+</div>
+
+<div class="grid grid-cols-2 gap-space-sm">
+
+<div class="flex flex-col p-space-sm rounded-lg bg-surface-container-lowest shadow-sm">
+
+<div class="flex items-center space-x-space-2xs mb-1">
+
+<span class="material-symbols-outlined text-[16px] text-on-tertiary-container">south_east</span>
+
+<span class="font-body-sm text-body-sm text-on-surface-variant">Total Received</span>
+
+</div>
+
+<span id="totalReceivedAmount" class="font-headline-sm text-headline-sm text-primary font-bold">₹0</span>
+
+<span class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">0 payments</span>
+
+</div>
+
+<div class="flex flex-col p-space-sm rounded-lg bg-surface-container-lowest shadow-sm">
+
+<div class="flex items-center space-x-space-2xs mb-1">
+
+<span class="material-symbols-outlined text-[16px] text-error">north_east</span>
+
+<span class="font-body-sm text-body-sm text-on-surface-variant">Refunds / Debits</span>
+
+</div>
+
+<span class="font-headline-sm text-headline-sm text-error font-bold">₹0</span>
+
+<span class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">0 refunds</span>
+
+</div>
+
+</div>
+
+<div class="flex items-center justify-between pt-space-xs">
+
+<button class="flex items-center space-x-1 text-secondary font-headline-sm text-body-md py-1 active:scale-95 transition-transform" type="button">
+
+<span class="material-symbols-outlined text-[18px]">download</span>
+
+<span class="">Download Statement</span>
+
+</button>
+
+<button class="flex items-center space-x-1 text-primary-container font-headline-sm text-body-md py-1 active:scale-95 transition-transform" type="button">
+
+<span class="">Settlement Details</span>
+
+<span class="material-symbols-outlined text-[16px]">chevron_right</span>
+
+</button>
+
+</div></section>
+
+<!-- Interactive Date Filter Pills -->
+
+<section class="w-full flex flex-col space-y-space-xs">
+
+<div class="flex items-center overflow-x-auto no-scrollbar space-x-space-xs py-1"><button class="filter-pill whitespace-nowrap px-space-md py-space-xs rounded-full bg-[#002E6E] text-on-primary font-headline-sm text-body-sm shadow-sm transition-all" data-period="today" type="button">Today</button>
+
+<button class="filter-pill whitespace-nowrap px-space-md py-space-xs rounded-full bg-surface-container-lowest text-on-surface font-headline-sm text-body-sm shadow-sm transition-all" data-period="yesterday" type="button">Yesterday</button>
+
+<button class="filter-pill whitespace-nowrap px-space-md py-space-xs rounded-full bg-surface-container-lowest text-on-surface font-headline-sm text-body-sm shadow-sm transition-all" data-period="week" type="button">This Week</button>
+
+<button class="filter-pill whitespace-nowrap px-space-md py-space-xs rounded-full bg-surface-container-lowest text-on-surface font-headline-sm text-body-sm shadow-sm transition-all" data-period="month" type="button">This Month</button></div>
+
+<!-- Quick Search Input -->
+
+<div class="relative w-full">
+
+<span class="absolute inset-y-0 left-0 pl-space-sm flex items-center pointer-events-none text-on-surface-variant">
+
+<span class="material-symbols-outlined text-[20px]">search</span>
+
+</span>
+
+<input class="w-full h-12 pl-10 pr-space-md bg-surface-container-lowest text-on-surface font-body-md rounded-xl shadow-sm outline-none placeholder:text-outline-variant focus:shadow-md transition-shadow" id="passbookSearch" placeholder="Search UPI ID, Payer Name, or UTR..." type="text">
+
+</div>
+
+</section>
+
+<!-- Soundbox Audio Telemetry Pulse Indicator (Live Delight) -->
+
+<!-- Transaction Ledger Stream -->
+
+<section class="w-full flex flex-col space-y-space-sm">
+
+<div class="flex items-center justify-between px-1">
+
+<span class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider">Today, 24 Oct 2024</span>
+
+<span class="font-label-caps text-label-caps text-on-surface-variant">Synced Just Now</span>
+
+</div>
+
+<div class="space-y-3" id="transaction-container">
+
+<!-- Template / Skeleton card for real-time JavaScript data injection -->
+
+<article class="tx-template-card bg-surface-container-lowest rounded-xl p-space-sm shadow-sm flex items-center justify-between transition-colors">
+
+<div class="flex items-center space-x-space-sm min-w-0 pr-space-xs">
+
+<div class="tx-icon w-10 h-10 rounded-full bg-surface-container flex items-center justify-center shrink-0 text-on-surface-variant">
+
+<span class="material-symbols-outlined text-[20px]">sync_alt</span>
+
+</div>
+
+<div class="flex flex-col min-w-0">
+
+<div class="tx-name font-semibold text-on-surface text-body-md truncate">Waiting for transactions...</div>
+
+<div class="tx-upi text-body-sm text-on-surface-variant truncate">UPI ID will appear here</div>
+
+<div class="tx-utr text-[11px] font-data-mono-num text-on-surface-variant mt-0.5">UTR: --</div>
+
+</div>
+
+</div>
+
+<div class="flex flex-col items-end shrink-0 pl-1">
+
+<div class="tx-amount font-bold text-headline-sm text-right text-on-surface">--</div>
+
+<div class="tx-time text-[11px] text-on-surface-variant text-right mt-0.5">--</div>
+
+<span class="tx-status text-[11px] font-semibold px-2 py-0.5 mt-1 rounded-full bg-surface-container text-on-surface-variant inline-block">Pending</span>
+
+</div>
+
+</article>
+
+</div>
+
+<!-- Empty Search State Placeholder -->
+
+<div class="hidden w-full bg-surface-container-lowest rounded-xl p-space-xl flex flex-col items-center justify-center text-center shadow-sm" id="noMatchCard">
+
+<div class="w-12 h-12 rounded-full bg-surface-container flex items-center justify-center text-on-surface-variant mb-space-xs">
+
+<span class="material-symbols-outlined text-[24px]">search_off</span>
+
+</div>
+
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-semibold">No Transactions Found</h3>
+
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1">Try searching by mobile number, UPI VPA, or change selected date pill.</p>
+
+</div>
+
+<!-- End of Feed Decorative Token -->
+
+<div class="flex items-center justify-center space-x-space-xs py-space-md">
+
+<div class="h-0.5 w-8 bg-outline-variant/30 rounded-full"></div>
+
+<span class="font-label-caps text-label-caps text-on-surface-variant uppercase">End of Today's Stream</span>
+
+<div class="h-0.5 w-8 bg-outline-variant/30 rounded-full"></div>
+
+</div>
+
+</section>
+
+<!-- Interactive Toast Notification container for Soundbox & Statement downloads -->
+
+<div class="fixed bottom-20 left-4 right-4 z-40 transform translate-y-28 opacity-0 transition-all duration-300 pointer-events-none flex items-center justify-between p-space-sm bg-inverse-surface text-inverse-on-surface rounded-xl shadow-xl" id="toastNotification">
+
+<div class="flex items-center space-x-space-xs">
+
+<span class="material-symbols-outlined text-[20px] text-tertiary-fixed" id="toastIcon">volume_up</span>
+
+<span class="font-body-md text-body-md font-medium" id="toastMessage">Soundbox: ₹450 received on Paytm</span>
+
+</div>
+
+<span class="font-label-caps text-label-caps text-surface-variant">OK</span>
+
+</div>
+
+</div>
+
+<script>
+
+  // Filter pills selection handling
+
+  const pills = document.querySelectorAll('.filter-pill');
+
+  pills.forEach((pill) => {
+
+    pill.addEventListener('click', () => {
+
+      pills.forEach((p) => {
+
+        p.classList.remove('bg-primary-container', 'text-on-primary');
+
+        p.classList.add('bg-surface-container-lowest', 'text-on-surface');
+
+      });
+
+      pill.classList.remove('bg-surface-container-lowest', 'text-on-surface');
+
+      pill.classList.add('bg-primary-container', 'text-on-primary');
+
+
+
+      const period = pill.getAttribute('data-period');
+
+      showNotification('calendar_month', `Viewing passbook for: ${pill.innerText.trim()}`);
+
+    });
+
+  });
+
+
+
+  // Client-side quick search & live counter
+
+  const searchInput = document.getElementById('passbookSearch');
+
+  const txnCards = document.querySelectorAll('.txn-card');
+
+  const counter = document.getElementById('searchStatusCounter');
+
+  const noMatchCard = document.getElementById('noMatchCard');
+
+
+
+  if (searchInput) {
+
+    searchInput.addEventListener('input', (e) => {
+
+      const query = e.target.value.toLowerCase().trim();
+
+      let matchCount = 0;
+
+
+
+      txnCards.forEach((card) => {
+
+        const text = card.getAttribute('data-search') || '';
+
+        if (text.includes(query)) {
+
+          card.classList.remove('hidden');
+
+          matchCount++;
+
+        } else {
+
+          card.classList.add('hidden');
+
+        }
+
+      });
+
+
+
+      if (counter) {
+
+        counter.textContent = `${matchCount} Txn${matchCount === 1 ? '' : 's'}`;
+
+      }
+
+
+
+      if (noMatchCard) {
+
+        if (matchCount === 0) {
+
+          noMatchCard.classList.remove('hidden');
+
+        } else {
+
+          noMatchCard.classList.add('hidden');
+
+        }
+
+      }
+
+    });
+
+  }
+
+
+
+  // Toast feedback helper
+
+  function showNotification(icon, message) {
+
+    const toast = document.getElementById('toastNotification');
+
+    const toastMsg = document.getElementById('toastMessage');
+
+    const toastIcon = document.getElementById('toastIcon');
+
+    if (!toast) return;
+
+
+
+    toastIcon.textContent = icon;
+
+    toastMsg.textContent = message;
+
+
+
+    toast.classList.remove('translate-y-28', 'opacity-0');
+
+    toast.classList.add('translate-y-0', 'opacity-100');
+
+
+
+    setTimeout(() => {
+
+      toast.classList.remove('translate-y-0', 'opacity-100');
+
+      toast.classList.add('translate-y-28', 'opacity-0');
+
+    }, 2400);
+
+  }
+
+
+
+  function testAudioVoice() {
+
+    showNotification('volume_up', 'Paytm Soundbox: "₹450 received on UPI"');
+
+  }
+
+
+
+  function triggerReportFeedback() {
+
+    showNotification('sim_card_download', 'Generating PDF Statement (Oct 24)...');
+
+  }
+
+
+
+  // Fetch transactions on load
+
+  document.addEventListener('DOMContentLoaded', async () => {
+
+    const txnContainer = document.getElementById('transaction-container');
+
+    const netSettledEl = document.getElementById('netSettledAmount');
+
+    const totalReceivedEl = document.getElementById('totalReceivedAmount');
+
+
+
+    try {
+
+      const res = await fetch("http://127.0.0.1:8000/api/transactions");
+
+      const txns = await res.json();
+
+
+
+      if (txnContainer) {
+
+        txnContainer.innerHTML = '';
+
+        
+
+        let netSettled = 0;
+
+        let totalReceived = 0;
+
+
+
+        txns.forEach(tx => {
+
+          if (tx.amount > 0) {
+
+            totalReceived += tx.amount;
+
+          }
+
+          netSettled += tx.amount;
+
+
+
+          const isPositive = tx.amount > 0;
+
+          const amountClass = isPositive ? 'text-green-600' : 'text-red-600';
+
+          const amountStr = isPositive ? `+₹${tx.amount.toFixed(0)}` : `-₹${Math.abs(tx.amount).toFixed(0)}`;
+
+          const iconStr = isPositive ? 'south_west' : 'north_east';
+
+          
+
+          const article = document.createElement('article');
+
+          article.className = "txn-card bg-surface-container-lowest rounded-xl p-space-sm shadow-sm flex items-center justify-between transition-colors";
+
+          article.setAttribute('data-search', `${tx.payer_name} ${tx.upi_id} ${tx.utr}`.toLowerCase());
+
+
+
+          article.innerHTML = `
+
+            <div class="flex items-center space-x-space-sm min-w-0 pr-space-xs">
+
+              <div class="tx-icon w-10 h-10 rounded-full bg-surface-container flex items-center justify-center shrink-0 text-on-surface-variant">
+
+                <span class="material-symbols-outlined text-[20px]">${iconStr}</span>
+
+              </div>
+
+              <div class="flex flex-col min-w-0">
+
+                <div class="tx-name font-semibold text-on-surface text-body-md truncate">${tx.payer_name}</div>
+
+                <div class="tx-upi text-body-sm text-on-surface-variant truncate">${tx.upi_id}</div>
+
+                <div class="tx-utr text-[11px] font-data-mono-num text-on-surface-variant mt-0.5">UTR: ${tx.utr}</div>
+
+              </div>
+
+            </div>
+
+            <div class="flex flex-col items-end shrink-0 pl-1">
+
+              <div class="tx-amount font-bold text-headline-sm text-right ${amountClass}">${amountStr}</div>
+
+              <div class="tx-time text-[11px] text-on-surface-variant text-right mt-0.5">${tx.timestamp}</div>
+
+              <span class="tx-status text-[11px] font-semibold px-2 py-0.5 mt-1 rounded-full bg-surface-container text-on-surface-variant inline-block">${tx.status}</span>
+
+            </div>
+
+          `;
+
+          txnContainer.appendChild(article);
+
+        });
+
+
+
+        if (netSettledEl) netSettledEl.textContent = `₹${netSettled.toFixed(0)}`;
+
+        if (totalReceivedEl) totalReceivedEl.textContent = `₹${totalReceived.toFixed(0)}`;
+
+      }
+
+    } catch (e) {
+
+      console.error("Error fetching transactions:", e);
+
+      if (txnContainer) {
+
+        txnContainer.innerHTML = '<div class="p-4 text-center text-error">Failed to load transactions.</div>';
+
+      }
+
+    }
+
+  });
+
+</script></main><nav class="fixed bottom-0 w-full z-50 pb-safe bg-surface-container-lowest/95 backdrop-blur-xl shadow-[0_-4px_24px_rgba(0,46,110,0.06)]" data-active-classes="text-[#002E6E] font-semibold"><div class="flex items-center justify-around h-16 px-space-xs"><a class="flex flex-col items-center justify-center min-w-[56px] h-12 text-on-surface-variant transition-colors group" data-path="merchant-dashboard" href="dashboard.html"><span class="material-symbols-outlined text-[22px] transition-transform group-active:scale-90">home</span><span class="font-body-sm text-body-sm text-[11px] mt-0.5 leading-none">Home</span></a><a aria-current="page" class="flex flex-col items-center justify-center min-w-[56px] h-12 transition-colors group text-[#002E6E] font-semibold" data-path="passbook" href="passbook.html"><span class="material-symbols-outlined text-[22px] transition-transform group-active:scale-90">receipt_long</span><span class="font-body-sm text-body-sm text-[11px] mt-0.5 leading-none">Passbook</span></a><a class="flex flex-col items-center justify-center min-w-[56px] h-12 text-on-surface-variant transition-colors group" data-path="merchant-lending" href="loans.html"><span class="material-symbols-outlined text-[22px] transition-transform group-active:scale-90">credit_score</span><span class="font-body-sm text-body-sm text-[11px] mt-0.5 leading-none">Loans</span></a><a class="flex flex-col items-center justify-center min-w-[56px] h-12 text-on-surface-variant transition-colors group" data-path="business-account" href="account.html"><span class="material-symbols-outlined text-[22px] transition-transform group-active:scale-90">store</span><span class="font-body-sm text-body-sm text-[11px] mt-0.5 leading-none">Account</span></a></div></nav>
+
+
+
+
+
+<!-- Copilot FAB -->
+<aside aria-label="AI Assistant" class="fixed right-4 bottom-24 z-[60]">
+<button class="flex items-center gap-2 bg-gradient-to-r from-[#2bc6ff] via-[#006686] to-[#002e6e] text-white px-4 py-3 rounded-full shadow-[0_8px_24px_rgba(43,198,255,0.45),0_4px_12px_rgba(0,46,110,0.3)] active:scale-95 transition-all" onclick="toggleChat()">
+<div class="relative">
+<span class="material-symbols-outlined text-[22px] animate-spin" style="animation-duration: 6s;">auto_awesome</span>
+<span class="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-[#53de9e] ring-2 ring-[#001a45]"></span>
+</div>
+<span class="font-body-sm text-body-sm font-bold tracking-tight">AI Copilot</span>
+</button>
+</aside>
+
+<!-- Chat Window (Hidden by default) -->
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const uploadInput = document.getElementById('json-upload');
+  if (!uploadInput) {
+    console.error("Upload input with ID 'json-upload' not found on the page.");
+    return;
+  }
+
+  uploadInput.addEventListener('change', async function(event) {
+    console.log("1. File input changed");
+    const file = event.target.files[0];
+    if (!file) {
+      console.log("No file selected.");
+      return;
+    }
+    console.log("2. File detected:", file.name);
+
+    const reader = new FileReader();
+    reader.onload = async function(e) {
+      console.log("3. File read successfully");
+      try {
+        const jsonData = JSON.parse(e.target.result);
+        console.log("4. JSON parsed:", jsonData);
+
+        const response = await fetch('http://127.0.0.1:8000/api/inventory/sync', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(jsonData)
+        });
+
+        console.log("5. Fetch response status:", response.status);
+        if (response.ok) {
+          alert('Store inventory synced successfully!');
+          event.target.value = '';
+        } else {
+          alert('Backend returned an error. Check FastAPI logs.');
+        }
+      } catch (error) {
+        console.error("Upload Error:", error);
+        alert('Could not parse JSON or connect to server.');
+      }
+    };
+    reader.readAsText(file);
+  });
+});
+</script>
+<script src="i18n.js"></script>
+
+<div id="copilot-window" class="fixed bottom-44 right-6 w-80 bg-white rounded-xl shadow-2xl border border-gray-200 hidden z-50 flex flex-col overflow-hidden">
+  <div class="bg-[#002970] text-white p-3 font-semibold text-sm flex justify-between items-center"><span>Paytm Merchant AI</span><button onclick="toggleChat()" class="hover:text-gray-300 text-lg leading-none">&times;</button></div>
+  <div id="chat-history" class="p-4 h-64 overflow-y-auto flex flex-col space-y-3 text-sm bg-gray-50">
+    <div class="bg-gray-200 p-2 rounded-lg self-start text-gray-800">Namaste! Do you want a summary of today's sales?</div>
+  </div>
+  <div class="p-2 bg-white border-t flex">
+    <input type="text" id="chat-input" class="flex-1 p-2 border rounded-l-lg outline-none text-sm" placeholder="Ask about sales...">
+    <button onclick="sendMessage()" class="bg-[#00B9F5] text-white px-3 rounded-r-lg">Send</button>
+  </div>
+</div>
+</body></html>
+
+
+
+
+
+
+
+
+
