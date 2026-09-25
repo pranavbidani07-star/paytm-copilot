@@ -1,0 +1,1191 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JALDRISHTI - AI Flood Intelligence & Response Platform</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'gov-teal': '#064e3b',
+            'gov-tealLight': '#047857',
+            'gov-tealLighter': '#059669',
+            'gov-saffron': '#d97706',
+            'gov-green': '#15803d',
+            'gov-paper': '#f8fafc',
+            'brand-blue': '#0284c7',
+            'status-critical': '#dc2626',
+            'status-warning': '#f59e0b',
+            'status-normal': '#10b981'
+          },
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            serif: ['Merriweather', 'Georgia', 'serif'],
+            mono: ['JetBrains Mono', 'monospace']
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Merriweather:wght@400;700;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    /* Custom Scrollbar & Animations */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #f1f5f9; }
+    ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    
+    @keyframes pulse-ring {
+      0% { transform: scale(0.95); opacity: 0.8; }
+      50% { transform: scale(1.2); opacity: 0.3; }
+      100% { transform: scale(0.95); opacity: 0.8; }
+    }
+    .radar-pulse { animation: pulse-ring 2s infinite ease-in-out; }
+    .fade-in { animation: fadeIn 0.3s ease-in-out; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+  </style>
+</head>
+<body class="bg-gov-paper text-slate-800 flex flex-col h-screen overflow-hidden font-sans select-none">
+
+  <!-- ==================== TOP UTILITY BAR ==================== -->
+  <div class="bg-slate-900 text-slate-300 text-[11px] py-1 px-4 flex justify-between items-center border-b border-t-[3px] border-t-gov-saffron z-50 shrink-0">
+    <div class="flex items-center gap-4">
+      <div class="flex gap-[2px] h-3 w-4 rounded-sm overflow-hidden border border-slate-600">
+        <div class="bg-gov-saffron w-full"></div>
+        <div class="bg-white w-full"></div>
+        <div class="bg-gov-green w-full"></div>
+      </div>
+      <span class="font-medium tracking-wide uppercase text-slate-200" id="txt-govTitle">Government of Assam</span>
+      <span class="hidden md:inline border-l border-slate-700 pl-3 uppercase text-slate-400" id="txt-deptTitle">Assam State Disaster Management Authority (ASDMA)</span>
+    </div>
+
+    <div class="flex gap-4 items-center">
+      <div class="flex gap-2 items-center">
+        <button onclick="handleTextSize('sm')" class="hover:text-white font-mono px-1 py-0.5 rounded hover:bg-slate-800" title="Decrease Text Size">A-</button>
+        <button onclick="handleTextSize('base')" class="hover:text-white font-mono px-1 py-0.5 rounded text-gov-saffron font-bold bg-slate-800" title="Reset Text Size">A</button>
+        <button onclick="handleTextSize('lg')" class="hover:text-white font-mono px-1 py-0.5 rounded hover:bg-slate-800" title="Increase Text Size">A+</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== MAIN HEADER ==================== -->
+  <header class="bg-gov-teal text-white py-3 px-4 md:px-6 shadow-md relative z-40 flex justify-between items-center shrink-0 border-b border-teal-900">
+    <div class="flex items-center gap-3 md:gap-4">
+      <button onclick="toggleMobileSidebar()" class="md:hidden p-1.5 rounded hover:bg-teal-800 text-slate-200">
+        <i data-lucide="menu" class="w-6 h-6"></i>
+      </button>
+
+      <div class="w-10 h-12 md:w-12 md:h-14 border border-teal-700/50 flex flex-col items-center justify-center bg-teal-900/40 rounded shadow-inner p-1">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/5/55/Emblem_of_India.svg" alt="Emblem" class="h-7 md:h-8 object-contain brightness-0 invert opacity-95">
+      </div>
+
+      <div>
+        <h1 class="font-serif text-xl md:text-3xl tracking-wide text-teal-50 drop-shadow-sm leading-none" id="txt-appTitle">JALDRISHTI</h1>
+        <div class="text-teal-400 text-[9px] md:text-[11px] font-bold tracking-[0.15em] md:tracking-[0.2em] mt-1 uppercase" id="txt-appSubtitle">AI Flood Intelligence & Response</div>
+        <div class="text-slate-300/80 text-[10px] tracking-wider mt-0.5 hidden sm:block" id="txt-seocTitle">State Emergency Operations Centre • Assam</div>
+      </div>
+    </div>
+
+    <div class="flex items-center gap-3 md:gap-4">
+      <!-- Responsive Language Selector Pill in Header -->
+      <div class="flex bg-teal-950/80 rounded-md border border-teal-700/70 overflow-hidden text-xs shadow-inner p-0.5">
+        <button id="lang-btn-en" onclick="setLanguage('en')" class="px-2.5 py-1 rounded text-[11px] font-bold transition-all bg-teal-600 text-white shadow-sm">English</button>
+        <button id="lang-btn-hi" onclick="setLanguage('hi')" class="px-2.5 py-1 rounded text-[11px] font-bold transition-all text-teal-200 hover:text-white hover:bg-teal-800/40">हिन्दी</button>
+        <button id="lang-btn-as" onclick="setLanguage('as')" class="px-2.5 py-1 rounded text-[11px] font-bold transition-all text-teal-200 hover:text-white hover:bg-teal-800/40">অসমীয়া</button>
+      </div>
+
+      <div class="flex items-center gap-2 text-slate-300">
+        <button onclick="openModal('modal-search')" class="p-1.5 rounded hover:bg-teal-800/60 hover:text-white transition-colors" title="Search (Ctrl+K)">
+          <i data-lucide="search" class="w-5 h-5"></i>
+        </button>
+        <button onclick="openModal('modal-notifications')" class="p-1.5 rounded hover:bg-teal-800/60 hover:text-white transition-colors relative" title="Notifications">
+          <i data-lucide="bell" class="w-5 h-5"></i>
+          <span class="absolute top-1 right-1 w-2 h-2 bg-gov-saffron rounded-full animate-pulse"></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ==================== BODY LAYOUT ==================== -->
+  <div class="flex-1 flex overflow-hidden relative">
+
+    <!-- Mobile Drawer Overlay -->
+    <div id="mobile-overlay" onclick="toggleMobileSidebar()" class="fixed inset-0 bg-slate-900/60 z-30 hidden md:hidden"></div>
+
+    <!-- SIDEBAR NAVIGATION -->
+    <aside id="app-sidebar" class="bg-white border-r border-slate-200 w-64 shrink-0 flex flex-col z-30 shadow-sm transition-transform duration-300 fixed md:relative inset-y-0 left-0 md:inset-auto h-full -translate-x-full md:translate-x-0">
+      
+      <div class="md:hidden flex justify-end p-2 border-b border-slate-100">
+        <button onclick="toggleMobileSidebar()" class="p-1 text-slate-400 hover:text-slate-700">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <nav class="flex-1 overflow-y-auto py-2">
+        <div class="px-4 py-2 text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-2" id="txt-navModules">Command Modules</div>
+        <ul class="space-y-1 px-2">
+          <li>
+            <button onclick="switchTab('overview')" id="nav-btn-overview" class="w-full flex items-center gap-3 px-3 py-2 text-xs font-semibold rounded-md transition-colors bg-gov-teal text-white shadow-sm">
+              <i data-lucide="activity" class="w-4 h-4"></i> <span id="txt-navOverview">Command Overview</span>
+            </button>
+          </li>
+          <li>
+            <button onclick="switchTab('flood-mapping')" id="nav-btn-flood-mapping" class="w-full flex items-center gap-3 px-3 py-2 text-xs font-semibold rounded-md transition-colors text-slate-600 hover:bg-slate-100 hover:text-slate-900">
+              <i data-lucide="map" class="w-4 h-4"></i> <span id="txt-navFlood">Flood Intelligence</span>
+            </button>
+          </li>
+          <li>
+            <button onclick="switchTab('drone-analysis')" id="nav-btn-drone-analysis" class="w-full flex items-center gap-3 px-3 py-2 text-xs font-semibold rounded-md transition-colors text-slate-600 hover:bg-slate-100 hover:text-slate-900">
+              <i data-lucide="video" class="w-4 h-4"></i> <span id="txt-navDrone">Drone Operations</span>
+            </button>
+          </li>
+          <li>
+            <button onclick="switchTab('victim-detection')" id="nav-btn-victim-detection" class="w-full flex items-center gap-3 px-3 py-2 text-xs font-semibold rounded-md transition-colors text-slate-600 hover:bg-slate-100 hover:text-slate-900">
+              <i data-lucide="users" class="w-4 h-4"></i> <span id="txt-navVictims">Victim Detection</span>
+            </button>
+          </li>
+          <li>
+            <button onclick="switchTab('rescue-priority')" id="nav-btn-rescue-priority" class="w-full flex items-center gap-3 px-3 py-2 text-xs font-semibold rounded-md transition-colors text-slate-600 hover:bg-slate-100 hover:text-slate-900">
+              <i data-lucide="shield-alert" class="w-4 h-4"></i> <span id="txt-navPriority">Rescue Priority</span>
+            </button>
+          </li>
+          <li>
+            <button onclick="switchTab('rescue-routes')" id="nav-btn-rescue-routes" class="w-full flex items-center gap-3 px-3 py-2 text-xs font-semibold rounded-md transition-colors text-slate-600 hover:bg-slate-100 hover:text-slate-900">
+              <i data-lucide="navigation" class="w-4 h-4"></i> <span id="txt-navRoutes">Safe Routes</span>
+            </button>
+          </li>
+          <li>
+            <button onclick="switchTab('reports')" id="nav-btn-reports" class="w-full flex items-center gap-3 px-3 py-2 text-xs font-semibold rounded-md transition-colors text-slate-600 hover:bg-slate-100 hover:text-slate-900">
+              <i data-lucide="file-text" class="w-4 h-4"></i> <span id="txt-navReports">Situation Reports</span>
+            </button>
+          </li>
+        </ul>
+
+        <div class="px-4 py-2 text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-4" id="txt-navQuickAccess">Quick Access</div>
+        <div class="px-2 space-y-1">
+          <button onclick="switchTab('rescue-priority')" class="w-full text-left px-3 py-2 text-xs rounded bg-red-50 text-red-800 font-semibold flex justify-between items-center border border-red-100 hover:bg-red-100 transition-colors">
+            <span id="txt-navEmergencyCases">Emergency Cases</span> <span class="bg-red-600 text-white text-[10px] py-0.5 px-2 rounded-full font-mono" id="val-emergencyCases">--</span>
+          </button>
+          <button onclick="switchTab('rescue-routes')" class="w-full text-left px-3 py-2 text-xs rounded text-slate-600 hover:bg-slate-100 hover:text-slate-900 font-medium transition-colors" id="txt-navRoutePlan">
+            Route Planning
+          </button>
+        </div>
+
+        <div class="px-4 py-2 text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-4" id="txt-navFieldNet">Field Network</div>
+        <div class="px-4 space-y-2 mb-4">
+          <div class="flex justify-between items-center text-xs">
+            <span class="text-slate-500 flex items-center gap-1.5"><i data-lucide="map-pin" class="w-3.5 h-3.5"></i> <span id="txt-navDistNodes">District Nodes</span></span>
+            <span class="font-mono font-medium text-slate-400" id="val-distNodes">--</span>
+          </div>
+          <div class="flex justify-between items-center text-xs">
+            <span class="text-slate-500 flex items-center gap-1.5"><i data-lucide="crosshair" class="w-3.5 h-3.5"></i> <span id="txt-navDroneFeeds">Drone Feeds</span></span>
+            <span class="font-mono font-medium text-slate-400" id="val-droneFeeds">--</span>
+          </div>
+          <div class="flex justify-between items-center text-xs">
+            <span class="text-slate-500 flex items-center gap-1.5"><i data-lucide="radio" class="w-3.5 h-3.5"></i> <span id="txt-navCommHealth">Comm Health</span></span>
+            <span class="font-mono font-medium text-slate-400" id="val-commHealth">--</span>
+          </div>
+        </div>
+      </nav>
+      
+      <div class="p-3 border-t border-slate-200 bg-slate-50 text-center shrink-0">
+        <div class="text-[9px] text-slate-400 font-semibold tracking-wider uppercase" id="txt-confidential">CONFIDENTIAL & OPERATIONAL</div>
+        <div class="text-[9px] text-slate-400 mt-0.5 font-mono">ASDMA Portal v2.4</div>
+      </div>
+    </aside>
+
+    <!-- MAIN CONTENT VIEW AREA -->
+    <main class="flex-1 overflow-y-auto scroll-smooth bg-gov-paper p-4 md:p-6 max-w-[1400px] mx-auto space-y-6">
+
+      <!-- ================= PAGE 1: OVERVIEW ================= -->
+      <div id="view-overview" class="tab-view space-y-6 fade-in">
+        
+        <!-- Hero Banner -->
+        <div class="relative rounded-xl overflow-hidden shadow-md border border-slate-300 h-[260px] md:h-[320px] flex items-end bg-slate-900">
+          <img src="https://images.unsplash.com/photo-1469122312224-c5846569feb1?auto=format&fit=crop&q=80&w=1600" onError="this.src='https://images.unsplash.com/photo-1542274368-443d694d79aa?auto=format&fit=crop&q=80&w=1600'" alt="Flood" class="absolute inset-0 w-full h-full object-cover opacity-75 mix-blend-luminosity">
+          <div class="absolute inset-0 bg-gradient-to-t from-gov-teal via-gov-teal/60 to-transparent"></div>
+          
+          <div class="relative z-10 p-6 md:p-8 w-full flex justify-between items-end">
+            <div class="max-w-2xl">
+              <div class="flex items-center gap-3 mb-3">
+                <span class="bg-red-600/90 text-white text-[10px] font-bold px-2 py-1 rounded-sm tracking-widest flex items-center gap-2 border border-red-500 shadow-sm uppercase">
+                  <span class="w-1.5 h-1.5 bg-white rounded-full animate-pulse"></span> LIVE OPERATIONS
+                </span>
+                <span class="bg-black/40 text-teal-200 text-[10px] font-mono px-2 py-1 rounded-sm border border-teal-500/30">
+                  LATEST SAR PASS: 14:32 IST
+                </span>
+              </div>
+              <h2 class="font-serif text-2xl md:text-4xl text-white mb-2 leading-tight drop-shadow-md" id="txt-heroHeading">
+                See the flood.<br><span class="text-teal-300">Understand the risk.</span><br>Act before it becomes a crisis.
+              </h2>
+              <p class="text-slate-200 text-xs md:text-sm mt-2" id="txt-heroSub">
+                Integrated flood intelligence and response coordination for Assam.
+              </p>
+            </div>
+            
+            <div class="hidden lg:flex flex-col items-end text-right font-mono text-[10px] text-teal-200/80 space-y-1">
+              <div>HUMAN-IN-THE-LOOP ACTIVE</div>
+              <div>MAJULI SECTOR 4 SCANNED: 98%</div>
+              <div class="text-gov-saffron border border-gov-saffron/30 bg-gov-saffron/10 px-2 py-0.5 mt-1 rounded">SYS_WARN: WATER LEVEL RISING</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 5 KPI Summary Cards -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+          <div class="bg-white p-4 rounded-lg border border-slate-200 shadow-sm flex flex-col justify-between">
+            <div class="flex justify-between items-center">
+              <div class="text-2xl font-bold font-mono text-slate-900" id="kpi-1">--</div>
+              <div class="p-2 rounded bg-slate-100 text-teal-700"><i data-lucide="waves" class="w-5 h-5"></i></div>
+            </div>
+            <div class="mt-3 text-xs font-bold text-slate-700" id="txt-kpiFlooded">Flooded Area</div>
+          </div>
+          <div class="bg-white p-4 rounded-lg border border-slate-200 shadow-sm flex flex-col justify-between">
+            <div class="flex justify-between items-center">
+              <div class="text-2xl font-bold font-mono text-slate-900" id="kpi-2">--</div>
+              <div class="p-2 rounded bg-slate-100 text-teal-700"><i data-lucide="home" class="w-5 h-5"></i></div>
+            </div>
+            <div class="mt-3 text-xs font-bold text-slate-700" id="txt-kpiSettlements">Affected Settlements</div>
+          </div>
+          <div class="bg-white p-4 rounded-lg border border-slate-200 shadow-sm flex flex-col justify-between">
+            <div class="flex justify-between items-center">
+              <div class="text-2xl font-bold font-mono text-slate-900" id="kpi-3">--</div>
+              <div class="p-2 rounded bg-slate-100 text-teal-700"><i data-lucide="map-pin-off" class="w-5 h-5"></i></div>
+            </div>
+            <div class="mt-3 text-xs font-bold text-slate-700" id="txt-kpiRoads">Blocked Roads</div>
+          </div>
+          <div class="bg-white p-4 rounded-lg border border-slate-200 shadow-sm flex flex-col justify-between">
+            <div class="flex justify-between items-center">
+              <div class="text-2xl font-bold font-mono text-slate-900" id="kpi-4">--</div>
+              <div class="p-2 rounded bg-slate-100 text-teal-700"><i data-lucide="users" class="w-5 h-5"></i></div>
+            </div>
+            <div class="mt-3 text-xs font-bold text-slate-700" id="txt-kpiPeople">People Detected</div>
+          </div>
+          <div class="bg-red-50/40 p-4 rounded-lg border border-red-200 shadow-sm flex flex-col justify-between">
+            <div class="flex justify-between items-center">
+              <div class="text-2xl font-bold font-mono text-red-700" id="kpi-5">--</div>
+              <div class="p-2 rounded bg-red-100 text-red-700"><i data-lucide="alert-triangle" class="w-5 h-5"></i></div>
+            </div>
+            <div class="mt-3 text-xs font-bold text-slate-800" id="txt-kpiCritical">Critical Priority</div>
+          </div>
+        </div>
+
+        <!-- Main Overview Grid -->
+        <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
+          <div class="xl:col-span-2 space-y-6">
+            
+            <!-- OPERATIONAL GIS MAP CARD -->
+            <div class="bg-white rounded-lg border border-slate-200 overflow-hidden shadow-sm flex flex-col">
+              <div class="bg-slate-50 py-3 px-4 border-b border-slate-200 flex justify-between items-center">
+                <h3 class="text-xs font-bold tracking-wider text-slate-800 uppercase flex items-center gap-2">
+                  <i data-lucide="map" class="w-4 h-4 text-teal-700"></i> Operational GIS Map (Assam State Operational Centre)
+                </h3>
+                <button onclick="switchTab('flood-mapping')" class="text-xs text-teal-700 font-semibold hover:underline flex items-center gap-1">
+                  Expand Full Screen <i data-lucide="arrow-right" class="w-3 h-3"></i>
+                </button>
+              </div>
+
+              <!-- Map Container -->
+              <div id="map-wrapper" class="relative w-full h-[520px] bg-slate-900 flex flex-col items-center justify-center">
+                <!-- CANVAS MAP ENGINE -->
+                <canvas id="gis-canvas" class="w-full h-full block bg-slate-900"></canvas>
+                
+                <!-- STANDBY NO DATA OVERLAY (When isDataLoaded = false) -->
+                <div id="map-standby-overlay" class="absolute inset-0 bg-slate-900/90 backdrop-blur-sm flex flex-col items-center justify-center p-6 text-center z-20">
+                  <div class="w-16 h-16 bg-slate-800 text-amber-400 rounded-full flex items-center justify-center mb-4 border border-amber-500/30">
+                    <i data-lucide="map" class="w-8 h-8"></i>
+                  </div>
+                  <h4 class="text-lg font-bold text-white mb-2" id="txt-mapStandbyTitle">Operational GIS Map Unavailable</h4>
+                  <p class="text-xs text-slate-300 max-w-md mb-6 leading-relaxed" id="txt-mapStandbyDesc">
+                    No geospatial dataset has been loaded into the system yet. Run satellite SAR or drone analysis to activate the operational GIS map.
+                  </p>
+                  <button onclick="switchTab('flood-mapping')" class="bg-teal-600 hover:bg-teal-500 text-white font-semibold text-xs px-6 py-2.5 rounded shadow-lg flex items-center gap-2">
+                    <i data-lucide="upload-cloud" class="w-4 h-4"></i> <span id="txt-uploadSarBtn">Upload SAR Data</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Command Quick Actions -->
+            <div class="bg-white rounded-lg border border-slate-200 p-4 shadow-sm">
+              <h3 class="text-xs font-bold text-slate-800 uppercase tracking-wider mb-3" id="txt-quickActions">Command Quick Actions</h3>
+              <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                <button onclick="switchTab('flood-mapping')" class="flex flex-col items-center justify-center p-4 border border-slate-200 rounded-lg hover:bg-teal-50 hover:border-teal-300 transition-colors">
+                  <i data-lucide="upload-cloud" class="w-6 h-6 text-teal-700 mb-2"></i>
+                  <span class="text-xs font-semibold text-slate-800" id="txt-qaUpload">Upload SAR Data</span>
+                </button>
+                <button onclick="switchTab('drone-analysis')" class="flex flex-col items-center justify-center p-4 border border-slate-200 rounded-lg hover:bg-teal-50 hover:border-teal-300 transition-colors">
+                  <i data-lucide="video" class="w-6 h-6 text-teal-700 mb-2"></i>
+                  <span class="text-xs font-semibold text-slate-800" id="txt-qaDrone">Analyze Drone Feed</span>
+                </button>
+                <button onclick="switchTab('victim-detection')" class="flex flex-col items-center justify-center p-4 border border-slate-200 rounded-lg hover:bg-teal-50 hover:border-teal-300 transition-colors">
+                  <i data-lucide="users" class="w-6 h-6 text-teal-700 mb-2"></i>
+                  <span class="text-xs font-semibold text-slate-800" id="txt-qaVictims">View Victims</span>
+                </button>
+                <button onclick="switchTab('rescue-routes')" class="flex flex-col items-center justify-center p-4 border border-slate-200 rounded-lg hover:bg-teal-50 hover:border-teal-300 transition-colors">
+                  <i data-lucide="navigation" class="w-6 h-6 text-teal-700 mb-2"></i>
+                  <span class="text-xs font-semibold text-slate-800" id="txt-qaRoutes">Safe Routes</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Situation Reports Table -->
+            <div class="bg-white rounded-lg border border-slate-200 shadow-sm overflow-hidden">
+              <div class="p-4 border-b border-slate-100 flex justify-between items-center">
+                <h3 class="text-xs font-bold text-slate-800 uppercase tracking-wider" id="txt-recentReports">Recent Situation Reports</h3>
+                <button onclick="switchTab('reports')" class="text-xs font-semibold text-teal-700 hover:underline" id="txt-viewAllReports">View all reports &rarr;</button>
+              </div>
+              <div class="overflow-x-auto">
+                <table class="w-full text-xs text-left">
+                  <thead class="bg-slate-50 text-slate-600 font-semibold border-b border-slate-200 uppercase">
+                    <tr>
+                      <th class="px-4 py-2.5">Assessment</th>
+                      <th class="px-4 py-2.5">District</th>
+                      <th class="px-4 py-2.5">Source</th>
+                      <th class="px-4 py-2.5">Timestamp</th>
+                      <th class="px-4 py-2.5">Status</th>
+                    </tr>
+                  </thead>
+                  <tbody id="overview-reports-body" class="divide-y divide-slate-100">
+                    <tr><td colspan="5" class="px-4 py-6 text-center text-slate-400">System on standby. Load dataset to display situation reports.</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Column -->
+          <div class="space-y-6">
+            <!-- Operational Rescue Queue -->
+            <div class="bg-white rounded-lg border border-slate-200 border-t-4 border-t-red-600 shadow-sm overflow-hidden">
+              <div class="bg-red-50/50 p-3 border-b border-red-100 flex items-center gap-2 font-bold text-xs text-red-800 uppercase">
+                <i data-lucide="alert-triangle" class="w-4 h-4 text-red-600"></i> <span id="txt-rescueQueue">Operational Rescue Queue</span>
+              </div>
+              <div id="overview-queue-body" class="divide-y divide-slate-100 max-h-[380px] overflow-y-auto">
+                <div class="p-6 text-center text-slate-400 text-xs">Queue empty. Waiting for AI triage...</div>
+              </div>
+            </div>
+
+            <!-- System Event Log -->
+            <div class="bg-white rounded-lg border border-slate-200 shadow-sm overflow-hidden">
+              <div class="p-3 border-b border-slate-100 font-bold text-xs text-slate-800 uppercase" id="txt-systemLog">Live System Log</div>
+              <div id="overview-log-body" class="p-4 space-y-3 text-xs">
+                <div class="text-slate-400 italic">Live event stream disconnected.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ================= PAGE 2: FLOOD MAPPING ================= -->
+      <div id="view-flood-mapping" class="tab-view space-y-6 hidden fade-in">
+        <div>
+          <h2 class="text-xl font-bold font-serif text-slate-900" id="txt-fmTitle">Flood Mapping Intelligence</h2>
+          <p class="text-xs text-slate-500 mt-1" id="txt-fmSub">Generate flood extent maps from cloud-penetrating Sentinel-1 SAR satellite imagery.</p>
+        </div>
+
+        <!-- File Upload Container -->
+        <div class="bg-white p-8 rounded-xl border-2 border-dashed border-slate-300 text-center max-w-2xl mx-auto shadow-sm">
+          <div class="w-14 h-14 bg-teal-50 text-teal-700 rounded-full flex items-center justify-center mx-auto mb-4">
+            <i data-lucide="upload-cloud" class="w-7 h-7"></i>
+          </div>
+          <h3 class="text-base font-bold text-slate-800 mb-1">Sentinel-1 SAR Data Ingestion</h3>
+          <p class="text-xs text-slate-500 mb-6">Upload Sentinel-1 GRD SAR file (.zip / .tif) for automatic water surface extraction.</p>
+          
+          <button onclick="triggerDataLoad()" class="bg-teal-700 hover:bg-teal-800 text-white font-semibold text-xs px-6 py-3 rounded-lg shadow flex items-center gap-2 mx-auto">
+            <i data-lucide="play" class="w-4 h-4 fill-current"></i> Load Sentinel-1 SAR Dataset & Run Segmentation
+          </button>
+        </div>
+
+        <!-- Processing Pipeline Status -->
+        <div id="pipeline-card" class="bg-slate-900 text-white p-6 rounded-xl border border-slate-800 shadow-lg hidden">
+          <div class="flex justify-between items-center mb-4">
+            <div class="font-mono text-xs font-bold text-teal-400 uppercase tracking-wider flex items-center gap-2">
+              <span class="w-2 h-2 bg-teal-400 rounded-full animate-ping"></span> SAR Processing Pipeline Running...
+            </div>
+            <div class="text-xs font-mono text-slate-400" id="pipeline-step">Stage 1/4</div>
+          </div>
+          <div class="w-full bg-slate-800 rounded-full h-2 overflow-hidden mb-4">
+            <div id="pipeline-progress" class="bg-teal-500 h-full transition-all duration-500 w-1/4"></div>
+          </div>
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 text-xs font-mono text-slate-300">
+            <div class="border border-slate-800 p-2 rounded bg-slate-950/50">1. Radiometric Calibration</div>
+            <div class="border border-slate-800 p-2 rounded bg-slate-950/50">2. Speckle Filtering</div>
+            <div class="border border-slate-800 p-2 rounded bg-slate-950/50">3. Binarization Thresholding</div>
+            <div class="border border-slate-800 p-2 rounded bg-slate-950/50">4. Geospatial Vectorization</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ================= PAGE 3: DRONE OPERATIONS ================= -->
+      <div id="view-drone-analysis" class="tab-view space-y-6 hidden fade-in">
+        <div>
+          <h2 class="text-xl font-bold font-serif text-slate-900" id="txt-droneTitle">UAV Drone Intelligence & Surveillance</h2>
+          <p class="text-xs text-slate-500 mt-1" id="txt-droneSub">Analyze aerial video feed to detect stranded individuals, boats, and submerged infrastructure.</p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div class="lg:col-span-2 bg-slate-900 rounded-xl overflow-hidden shadow-lg border border-slate-800 flex flex-col">
+            <div class="bg-slate-950 p-3 flex justify-between items-center text-xs font-mono text-slate-300 border-b border-slate-800">
+              <span class="text-teal-400 font-bold flex items-center gap-2"><span class="w-2 h-2 bg-red-500 rounded-full animate-pulse"></span> LIVE FEED • DRONE_MAJULI_04</span>
+              <span>1080p • 60 FPS • ALT: 120m</span>
+            </div>
+            
+            <!-- Drone Video Simulation Canvas -->
+            <div class="relative w-full h-[400px] bg-slate-950">
+              <canvas id="drone-canvas" class="w-full h-full block"></canvas>
+            </div>
+          </div>
+
+          <!-- Drone Controls & Detection Log -->
+          <div class="space-y-4">
+            <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+              <h3 class="text-xs font-bold text-slate-800 uppercase tracking-wider mb-3">Detection Controls</h3>
+              <button onclick="triggerDataLoad()" class="w-full bg-teal-700 hover:bg-teal-800 text-white text-xs font-semibold py-2.5 px-4 rounded shadow flex items-center justify-center gap-2 mb-2">
+                <i data-lucide="video" class="w-4 h-4"></i> Run AI Object Detection
+              </button>
+            </div>
+
+            <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+              <h3 class="text-xs font-bold text-slate-800 uppercase tracking-wider mb-3">Live Detections Summary</h3>
+              <div class="space-y-2 text-xs">
+                <div class="flex justify-between p-2 bg-slate-50 rounded"><span>Stranded Victims:</span> <span class="font-mono font-bold text-red-700">14 Detected</span></div>
+                <div class="flex justify-between p-2 bg-slate-50 rounded"><span>Rescue Boats:</span> <span class="font-mono font-bold text-teal-700">03 Active</span></div>
+                <div class="flex justify-between p-2 bg-slate-50 rounded"><span>Submerged Vehicles:</span> <span class="font-mono font-bold text-amber-700">06 Located</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ================= PAGE 4: VICTIM DETECTION ================= -->
+      <div id="view-victim-detection" class="tab-view space-y-6 hidden fade-in">
+        <div>
+          <h2 class="text-xl font-bold font-serif text-slate-900" id="txt-victimTitle">Stranded Victim Detection & Tracking</h2>
+          <p class="text-xs text-slate-500 mt-1" id="txt-victimSub">AI-assisted identification of stranded individuals requiring immediate evacuation.</p>
+        </div>
+
+        <div class="bg-white rounded-xl border border-slate-200 p-4 shadow-sm flex flex-col md:flex-row justify-between items-center gap-4">
+          <div class="flex items-center gap-3 w-full md:w-auto">
+            <input type="text" placeholder="Filter by case ID or village..." class="px-3 py-1.5 border border-slate-300 rounded text-xs w-full md:w-64 focus:outline-none focus:border-teal-600">
+          </div>
+          <button onclick="triggerDataLoad()" class="bg-teal-700 text-white text-xs font-semibold px-4 py-2 rounded hover:bg-teal-800 shadow w-full md:w-auto">
+            Ingest Detection Data
+          </button>
+        </div>
+
+        <div id="victim-list-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div class="p-6 bg-white rounded-xl border border-slate-200 text-center col-span-full text-slate-400 text-xs">
+            No detection targets active. Click "Ingest Detection Data" to populate targets.
+          </div>
+        </div>
+      </div>
+
+      <!-- ================= PAGE 5: RESCUE PRIORITY ================= -->
+      <div id="view-rescue-priority" class="tab-view space-y-6 hidden fade-in">
+        <div>
+          <h2 class="text-xl font-bold font-serif text-slate-900" id="txt-priorityTitle">Rescue Priority Triage Engine</h2>
+          <p class="text-xs text-slate-500 mt-1" id="txt-prioritySub">Multi-criteria priority ranking based on medical condition, water rise velocity and vulnerability index.</p>
+        </div>
+
+        <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+          <div class="p-4 border-b border-slate-200 font-bold text-xs text-slate-800 uppercase">Triage Cases Queue</div>
+          <div class="overflow-x-auto">
+            <table class="w-full text-xs text-left">
+              <thead class="bg-slate-50 text-slate-600 font-semibold border-b border-slate-200 uppercase">
+                <tr>
+                  <th class="px-4 py-3">Case ID</th>
+                  <th class="px-4 py-3">Location</th>
+                  <th class="px-4 py-3">People</th>
+                  <th class="px-4 py-3">Vulnerability</th>
+                  <th class="px-4 py-3">Priority Level</th>
+                  <th class="px-4 py-3 text-right">Action</th>
+                </tr>
+              </thead>
+              <tbody id="priority-table-body" class="divide-y divide-slate-100">
+                <tr><td colspan="6" class="px-4 py-8 text-center text-slate-400">Queue empty. Load operational dataset to trigger triage calculations.</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ================= PAGE 6: RESCUE ROUTES ================= -->
+      <div id="view-rescue-routes" class="tab-view space-y-6 hidden fade-in">
+        <div>
+          <h2 class="text-xl font-bold font-serif text-slate-900" id="txt-routesTitle">Safe Rescue Routes Planning</h2>
+          <p class="text-xs text-slate-500 mt-1" id="txt-routesSub">Compute safe navigation paths avoiding flooded zones and blocked roads.</p>
+        </div>
+
+        <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+          <div class="flex justify-between items-center mb-4">
+            <h3 class="text-xs font-bold text-slate-800 uppercase tracking-wider">Safe Navigation Corridor</h3>
+            <button onclick="triggerDataLoad()" class="bg-teal-700 text-white text-xs font-semibold px-4 py-1.5 rounded hover:bg-teal-800">Compute Routes</button>
+          </div>
+          <div class="relative w-full h-[400px] bg-slate-900 rounded-lg overflow-hidden">
+            <canvas id="route-canvas" class="w-full h-full block"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- ================= PAGE 7: SITUATION REPORTS ================= -->
+      <div id="view-reports" class="tab-view space-y-6 hidden fade-in">
+        <div>
+          <h2 class="text-xl font-bold font-serif text-slate-900" id="txt-reportsTitle">Situation Reports & SEOC Bulletins</h2>
+          <p class="text-xs text-slate-500 mt-1" id="txt-reportsSub">Official disaster situation reports and summary briefings.</p>
+        </div>
+
+        <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-6">
+          <div class="space-y-4" id="reports-full-list">
+            <div class="p-6 text-center text-slate-400 text-xs">No situation reports generated. Click "Upload SAR Data" on Overview page.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- FOOTER -->
+      <footer class="mt-12 bg-gov-teal text-slate-300 border-t-4 border-gov-saffron p-6 rounded-xl">
+        <div class="flex flex-col md:flex-row justify-between items-center text-xs space-y-4 md:space-y-0">
+          <div>
+            <div class="font-serif text-lg text-white font-bold">JALDRISHTI • Government of Assam</div>
+            <div class="text-[11px] text-teal-200/80 mt-0.5">Assam State Disaster Management Authority (ASDMA)</div>
+          </div>
+          <div class="text-right font-mono text-[11px] text-teal-200/80">
+            <div>State Control Room Toll-Free Helpline: <span class="text-gov-saffron font-bold">1070 / 1079</span></div>
+            <div>&copy; 2026 Government of Assam. All rights reserved.</div>
+          </div>
+        </div>
+      </footer>
+    </main>
+  </div>
+
+  <!-- ================= MODALS ================= -->
+  <!-- Search Modal -->
+  <div id="modal-search" class="fixed inset-0 bg-slate-900/60 z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-xl max-w-lg w-full p-6 space-y-4 shadow-2xl">
+      <div class="flex justify-between items-center border-b pb-3">
+        <h3 class="font-bold text-slate-800 text-sm">Search JALDRISHTI Platform</h3>
+        <button onclick="closeModal('modal-search')" class="text-slate-400 hover:text-slate-700"><i data-lucide="x" class="w-5 h-5"></i></button>
+      </div>
+      <input type="text" placeholder="Search case ID, district name, village, report..." class="w-full px-4 py-2 border border-slate-300 rounded text-sm focus:outline-none focus:border-teal-600">
+      <div class="text-xs text-slate-400">Press Esc to close</div>
+    </div>
+  </div>
+
+  <!-- Notifications Modal -->
+  <div id="modal-notifications" class="fixed inset-0 bg-slate-900/60 z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-xl max-w-md w-full p-6 space-y-4 shadow-2xl">
+      <div class="flex justify-between items-center border-b pb-3">
+        <h3 class="font-bold text-slate-800 text-sm">Emergency Alerts & Bulletins</h3>
+        <button onclick="closeModal('modal-notifications')" class="text-slate-400 hover:text-slate-700"><i data-lucide="x" class="w-5 h-5"></i></button>
+      </div>
+      <div class="space-y-3 text-xs">
+        <div class="p-3 bg-red-50 border-l-4 border-red-600 rounded">
+          <div class="font-bold text-red-800">ALERT: Water Level Rising</div>
+          <div class="text-slate-600 mt-1">Brahmaputra water level crossed danger mark at Majuli.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= EMBEDDED JAVASCRIPT ================= -->
+  <script>
+    // Initialize Lucide Icons
+    lucide.createIcons();
+
+    // Application Global State
+    let currentLang = localStorage.getItem('jaldrishti_lang') || 'en';
+    let isDataLoaded = false;
+    let currentTab = 'overview';
+
+    // Mock Data Objects
+    const mockReports = [
+      { id: 'REP-001', name: 'Majuli Island Inundation SAR Pass #4', location: 'Majuli Sector 4', source: 'Sentinel-1 SAR', date: '14:32 IST', status: 'Completed' },
+      { id: 'REP-002', name: 'Dhemaji Sub-division UAV Aerial Scan', location: 'Dhemaji North', source: 'UAV Drone Feed #2', date: '13:15 IST', status: 'Completed' },
+      { id: 'REP-003', name: 'Morigaon Highway Route Obstruction', location: 'Morigaon NH-37', source: 'Ground Observers', date: '11:45 IST', status: 'Processing' }
+    ];
+
+    const mockPriorities = [
+      { id: 'VIC-2026-0017', location: 'Borpeta Village (Sector 4)', peopleDetected: 14, level: 'Critical', reason: 'Rising water level (0.4m/hr), 3 elderly persons stranded on tin roof.' },
+      { id: 'VIC-2026-0018', location: 'Kalgaon High School Shelter', peopleDetected: 28, level: 'Critical', reason: 'Surrounded by fast water current, medical emergency reported.' },
+      { id: 'VIC-2026-0019', location: 'Majuli West Embankment', peopleDetected: 8, level: 'High', reason: 'Embankment breach imminent, safe boat access path clear.' }
+    ];
+
+    const mockActivities = [
+      { description: 'Sentinel-1 SAR satellite pass dataset processed.', timestamp: '14:32 IST', status: 'success' },
+      { description: 'Critical priority alert generated for Borpeta Village.', timestamp: '14:10 IST', status: 'critical' },
+      { description: 'NDRF Rescue Team 4 dispatched to Majuli Sector 4.', timestamp: '13:45 IST', status: 'normal' }
+    ];
+
+    // Translation Dictionaries
+    const i18n = {
+      en: {
+        appTitle: "JALDRISHTI",
+        appSubtitle: "AI Flood Intelligence & Response",
+        govTitle: "Government of Assam",
+        deptTitle: "Assam State Disaster Management Authority (ASDMA)",
+        seocTitle: "State Emergency Operations Centre • Assam",
+        navModules: "Command Modules",
+        navOverview: "Command Overview",
+        navFlood: "Flood Intelligence",
+        navDrone: "Drone Operations",
+        navVictims: "Victim Detection",
+        navPriority: "Rescue Priority",
+        navRoutes: "Safe Routes",
+        navReports: "Situation Reports",
+        navQuickAccess: "Quick Access",
+        navEmergencyCases: "Emergency Cases",
+        navRoutePlan: "Route Planning",
+        navFieldNet: "Field Network",
+        navDistNodes: "District Nodes",
+        navDroneFeeds: "Drone Feeds",
+        navCommHealth: "Comm Health",
+        confidential: "CONFIDENTIAL & OPERATIONAL",
+        heroHeading: "See the flood.<br><span class='text-teal-300'>Understand the risk.</span><br>Act before it becomes a crisis.",
+        heroSub: "Integrated flood intelligence and response coordination for Assam.",
+        kpiFlooded: "Flooded Area",
+        kpiSettlements: "Affected Settlements",
+        kpiRoads: "Blocked Roads",
+        kpiPeople: "People Detected",
+        kpiCritical: "Critical Priority",
+        mapStandbyTitle: "Operational GIS Map Unavailable",
+        mapStandbyDesc: "No geospatial dataset has been loaded into the system yet. Run satellite SAR or drone analysis to activate the operational GIS map.",
+        uploadSarBtn: "Upload SAR Data",
+        quickActions: "Command Quick Actions",
+        qaUpload: "Upload SAR Data",
+        qaDrone: "Analyze Drone Feed",
+        qaVictims: "View Victims",
+        qaRoutes: "Safe Routes",
+        recentReports: "Recent Situation Reports",
+        viewAllReports: "View all reports →",
+        rescueQueue: "Operational Rescue Queue",
+        systemLog: "Live System Log",
+        fmTitle: "Flood Mapping Intelligence",
+        fmSub: "Generate flood extent maps from cloud-penetrating Sentinel-1 SAR satellite imagery.",
+        droneTitle: "UAV Drone Intelligence & Surveillance",
+        droneSub: "Analyze aerial video feed to detect stranded individuals, boats, and submerged infrastructure.",
+        victimTitle: "Stranded Victim Detection & Tracking",
+        victimSub: "AI-assisted identification of stranded individuals requiring immediate evacuation.",
+        priorityTitle: "Rescue Priority Triage Engine",
+        prioritySub: "Multi-criteria priority ranking based on medical condition, water rise velocity and vulnerability index.",
+        routesTitle: "Safe Rescue Routes Planning",
+        routesSub: "Compute safe navigation paths avoiding flooded zones and blocked roads.",
+        reportsTitle: "Situation Reports & SEOC Bulletins",
+        reportsSub: "Official disaster situation reports and summary briefings."
+      },
+      hi: {
+        appTitle: "जलदृष्टि",
+        appSubtitle: "एआई बाढ़ सूचना एवं त्वरित राहत प्रणाली",
+        govTitle: "असम सरकार",
+        deptTitle: "असम राज्य आपदा प्रबंधन प्राधिकरण (ASDMA)",
+        seocTitle: "राज्य आपातकालीन परिचालन केंद्र • असम",
+        navModules: "कमांड मॉड्यूल",
+        navOverview: "कमांड सिंहावलोकन",
+        navFlood: "बाढ़ सूचना एवं मानचित्रण",
+        navDrone: "ड्रोन संचालन",
+        navVictims: "पीड़ित पहचान",
+        navPriority: "बचाव प्राथमिकता",
+        navRoutes: "सुरक्षित मार्ग",
+        navReports: "स्थिति रिपोर्ट",
+        navQuickAccess: "त्वरित पहुंच",
+        navEmergencyCases: "आपातकालीन मामले",
+        navRoutePlan: "मार्ग योजना",
+        navFieldNet: "फील्ड नेटवर्क",
+        navDistNodes: "जिला नोड्स",
+        navDroneFeeds: "ड्रोन फीड्स",
+        navCommHealth: "संचार स्वास्थ्य",
+        confidential: "गोपनीय एवं परिचालनात्मक",
+        heroHeading: "बाढ़ को देखें।<br><span class='text-teal-300'>जोखिम को समझें।</span><br>संकट बनने से पहले कार्रवाई करें।",
+        heroSub: "असम के लिए एकीकृत बाढ़ खुफिया और प्रतिक्रिया समन्वय।",
+        kpiFlooded: "बाढ़ग्रस्त क्षेत्र",
+        kpiSettlements: "प्रभावित बस्तियां",
+        kpiRoads: "अवरुद्ध सड़कें",
+        kpiPeople: "लोग मिले",
+        kpiCritical: "अति-संवेदनशील",
+        mapStandbyTitle: "परिचालनात्मक जीआईएस मानचित्र अनुपलब्ध",
+        mapStandbyDesc: "अभी तक कोई भू-स्थानिक डेटासेट लोड नहीं किया गया है। जीआईएस मानचित्र सक्रिय करने के लिए एसएआर या ड्रोन विश्लेषण चलाएं।",
+        uploadSarBtn: "एसएआर डेटा अपलोड करें",
+        quickActions: "कमांड त्वरित कार्रवाइयां",
+        qaUpload: "एसएआर डेटा अपलोड",
+        qaDrone: "ड्रोन फीड विश्लेषण",
+        qaVictims: "पीड़ित देखें",
+        qaRoutes: "सुरक्षित मार्ग",
+        recentReports: "हाल की स्थिति रिपोर्ट",
+        viewAllReports: "सभी रिपोर्ट देखें →",
+        rescueQueue: "परिचालनात्मक बचाव कतार",
+        systemLog: "लाइव सिस्टम लॉग",
+        fmTitle: "बाढ़ मानचित्रण सूचना",
+        fmSub: "सेंटिनल-1 एसएआर उपग्रह इमेजरी से जल विस्तार मानचित्र तैयार करें।",
+        droneTitle: "ड्रोन निगरानी एवं एआई विश्लेषण",
+        droneSub: "बाढ़ग्रस्त क्षेत्रों में फंसे लोगों का पता लगाने के लिए ड्रोन वीडियो का विश्लेषण करें।",
+        victimTitle: "फंसे पीड़ितों की पहचान एवं ट्रैकिंग",
+        victimSub: "एआई-सहायता प्राप्त पीड़ित पहचान और बचाव स्थान निर्धारण।",
+        priorityTitle: "बचाव प्राथमिकता प्राथमिकतीकरण",
+        prioritySub: "खोज एवं बचाव अभियान के लिए बहु-मानदंड प्राथमिकता रैंकिंग।",
+        routesTitle: "सुरक्षित बचाव मार्ग योजना",
+        routesSub: "बाढ़ग्रस्त क्षेत्रों से बचते हुए सुरक्षित नौवहन पथ तैयार करें।",
+        reportsTitle: "स्थिति रिपोर्ट एवं SEOC बुलेटिन",
+        reportsSub: "आधिकारिक आपदा स्थिति रिपोर्ट और सारांश ब्रीफिंग।"
+      },
+      as: {
+        appTitle: "জলদৃষ্টি",
+        appSubtitle: "এআই বানপানী তথ্য আৰু খৰতকীয়া সাহায্য প্ৰণালী",
+        govTitle: "অসম চৰকাৰ",
+        deptTitle: "অসম ৰাজ্যিক দুৰ্যোগ ব্যৱস্থাপনা প্ৰাধিকৰণ (ASDMA)",
+        seocTitle: "ৰাজ্যিক জৰুৰীকালীন পৰিচালনা কেন্দ্ৰ • অসম",
+        navModules: "কমাণ্ড মডিউল",
+        navOverview: "কমাণ্ড অৱলোকন",
+        navFlood: "বানপানী তথ্য",
+        navDrone: "ড্ৰোন অপাৰেচন",
+        navVictims: "ভুক্তভোগী চিনাক্তকৰণ",
+        navPriority: "উদ্ধাৰৰ অগ্ৰাধিকাৰ",
+        navRoutes: "সুৰক্ষিত পথ",
+        navReports: "পৰিস্থিতি প্ৰতিবেদন",
+        navQuickAccess: "দ্ৰুত প্ৰৱেশ",
+        navEmergencyCases: "জৰুৰীকালীন কেছ",
+        navRoutePlan: "পথ পৰিকল্পনা",
+        navFieldNet: "ফিল্ড নেটৱৰ্ক",
+        navDistNodes: "জিলা নোডসমূহ",
+        navDroneFeeds: "ড্ৰোন ফিডসমূহ",
+        navCommHealth: "যোগাযোগ স্বাস্থ্য",
+        confidential: "গোপনীয় আৰু অপাৰেচনেল",
+        heroHeading: "বানপানী চাওক।<br><span class='text-teal-300'>ঝুঁকি বুজি পাওক।</span><br>সংকট হোৱাৰ আগতে ব্যৱস্থা লওক।",
+        heroSub: "অসমৰ বাবে সংহত বানপানী তথ্য আৰু সাহায্য সমন্বয়।",
+        kpiFlooded: "বানপানী হোৱা অঞ্চল",
+        kpiSettlements: "প্ৰভাৱিত বসতি",
+        kpiRoads: "অৱৰুদ্ধ পথ",
+        kpiPeople: "চিনাক্ত মানুহ",
+        kpiCritical: "অতি-সংবেদনশীল",
+        mapStandbyTitle: "অপাৰেচনেল GIS মেপ অনুপলব্ধ",
+        mapStandbyDesc: "এতিয়ালৈকে কোনো ভূ-স্থানিক ডাটাছেট লোড কৰা হোৱা নাই। GIS মেপ সক্ৰিয় কৰিবলৈ উপগ্ৰহ বা ড্ৰোন বিশ্লেষণ চলাওক।",
+        uploadSarBtn: "SAR তথ্য আপলোড কৰক",
+        quickActions: "কমাণ্ড দ্ৰুত কাৰ্যৱালী",
+        qaUpload: "SAR তথ্য আপলোড",
+        qaDrone: "ড্ৰোন ফিড বিশ্লেষণ",
+        qaVictims: "ভুক্তভোগী চাওক",
+        qaRoutes: "সুৰক্ষিত পথ",
+        recentReports: "শেহতীয়া পৰিস্থিতি প্ৰতিবেদন",
+        viewAllReports: "সকলো প্ৰতিবেদন চাওক →",
+        rescueQueue: "অপাৰেচনেল উদ্ধাৰ শাৰী",
+        systemLog: "লাইভ ছিষ্টেম লগ",
+        fmTitle: "বানপানী মেপিং তথ্য",
+        fmSub: "SAR উপগ্ৰহ ছবিৰ পৰা পানীৰ পৰিসৰৰ মেপ প্ৰস্তুত কৰক।",
+        droneTitle: "ড্ৰোন নিৰীক্ষণ আৰু AI বিশ্লেষণ",
+        droneSub: "বানপানীত আবদ্ধ মানুহ বিচাৰি উলিয়াবলৈ ড্ৰোন ভিডিঅ’ বিশ্লেষণ কৰক।",
+        victimTitle: "আবদ্ধ ভুক্তভোগী চিনাক্তকৰণ",
+        victimSub: "AI-সহায়তা প্ৰাপ্ত ভুক্তভোগী চিনাক্তকৰণ আৰু উদ্ধাৰ।",
+        priorityTitle: "উদ্ধাৰৰ অগ্ৰাধিকাৰ শ্ৰেণীবিভাজন",
+        prioritySub: "সন্ধান আৰু উদ্ধাৰ অভিযানৰ বাবে বহু-মানদণ্ডৰ অগ্ৰাধিকাৰ ৰেংকিং।",
+        routesTitle: "সুৰক্ষিত উদ্ধাৰ পথ পৰিকল্পনা",
+        routesSub: "বানপানী হোৱা অঞ্চল এৰাই সুৰক্ষিত পথ প্ৰস্তুত কৰক।",
+        reportsTitle: "পৰিস্থিতি প্ৰতিবেদন আৰু SEOC বুলেটিন",
+        reportsSub: "আনুষ্ঠানিক দুৰ্যোগ পৰিস্থিতি প্ৰতিবেদন আৰু সাৰাংশ ব্ৰিফিং।"
+      }
+    };
+
+    // Set Language Function
+    function setLanguage(lang) {
+      currentLang = lang;
+      localStorage.setItem('jaldrishti_lang', lang);
+      
+      // Update Button Styles
+      ['en', 'hi', 'as'].forEach(l => {
+        const btn = document.getElementById(`lang-btn-${l}`);
+        if (l === lang) {
+          btn.className = "px-2.5 py-1 rounded text-[11px] font-bold transition-all bg-teal-600 text-white shadow-sm";
+        } else {
+          btn.className = "px-2.5 py-1 rounded text-[11px] font-bold transition-all text-teal-200 hover:text-white hover:bg-teal-800/40";
+        }
+      });
+
+      // Update Text Elements
+      const dict = i18n[lang] || i18n.en;
+      Object.keys(dict).forEach(key => {
+        const el = document.getElementById(`txt-${key}`);
+        if (el) {
+          if (key === 'heroHeading') {
+            el.innerHTML = dict[key];
+          } else {
+            el.innerText = dict[key];
+          }
+        }
+      });
+    }
+
+    // Switch Tab Function
+    function switchTab(tabId) {
+      currentTab = tabId;
+      document.querySelectorAll('.tab-view').forEach(el => el.classList.add('hidden'));
+      const target = document.getElementById(`view-${tabId}`);
+      if (target) target.classList.remove('hidden');
+
+      // Update Nav Button Styles
+      const navIds = ['overview', 'flood-mapping', 'drone-analysis', 'victim-detection', 'rescue-priority', 'rescue-routes', 'reports'];
+      navIds.forEach(id => {
+        const btn = document.getElementById(`nav-btn-${id}`);
+        if (btn) {
+          if (id === tabId) {
+            btn.className = "w-full flex items-center gap-3 px-3 py-2 text-xs font-semibold rounded-md transition-colors bg-gov-teal text-white shadow-sm";
+          } else {
+            btn.className = "w-full flex items-center gap-3 px-3 py-2 text-xs font-semibold rounded-md transition-colors text-slate-600 hover:bg-slate-100 hover:text-slate-900";
+          }
+        }
+      });
+
+      // Redraw Canvases on tab switch after DOM reflow
+      setTimeout(() => {
+        if (tabId === 'overview' && isDataLoaded) drawGisMap();
+        if (tabId === 'drone-analysis') drawDroneFeed();
+        if (tabId === 'rescue-routes') drawRouteMap();
+      }, 50);
+
+      // Close mobile drawer if open
+      document.getElementById('app-sidebar').classList.add('-translate-x-full');
+      document.getElementById('mobile-overlay').classList.add('hidden');
+    }
+
+    // Toggle Mobile Sidebar
+    function toggleMobileSidebar() {
+      const sidebar = document.getElementById('app-sidebar');
+      const overlay = document.getElementById('mobile-overlay');
+      sidebar.classList.toggle('-translate-x-full');
+      overlay.classList.toggle('hidden');
+    }
+
+    // Text Size Accessibility
+    function handleTextSize(size) {
+      const html = document.documentElement;
+      if (size === 'sm') html.style.fontSize = '14px';
+      if (size === 'base') html.style.fontSize = '16px';
+      if (size === 'lg') html.style.fontSize = '18px';
+    }
+
+    // Modal Control
+    function openModal(id) { document.getElementById(id).classList.remove('hidden'); }
+    function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
+
+    // Trigger Data Insertion
+    function triggerDataLoad() {
+      // Show processing pipeline on Flood Mapping if on that page
+      if (currentTab === 'flood-mapping') {
+        const pipeline = document.getElementById('pipeline-card');
+        const progress = document.getElementById('pipeline-progress');
+        pipeline.classList.remove('hidden');
+        progress.style.width = '25%';
+        
+        setTimeout(() => progress.style.width = '50%', 800);
+        setTimeout(() => progress.style.width = '75%', 1600);
+        setTimeout(() => {
+          progress.style.width = '100%';
+          setTimeout(() => {
+            isDataLoaded = true;
+            updateDataUI();
+            switchTab('overview');
+          }, 600);
+        }, 2400);
+        return;
+      }
+
+      isDataLoaded = true;
+      updateDataUI();
+    }
+
+    // Update UI when Data is Loaded
+    function updateDataUI() {
+      if (!isDataLoaded) return;
+
+      // Hide Standby Overlay
+      document.getElementById('map-standby-overlay').classList.add('hidden');
+
+      // Update KPI Numbers
+      document.getElementById('kpi-1').innerText = '3,420 sq km';
+      document.getElementById('kpi-2').innerText = '1,280';
+      document.getElementById('kpi-3').innerText = '42';
+      document.getElementById('kpi-4').innerText = '1,840';
+      document.getElementById('kpi-5').innerText = '12';
+
+      // Update Field Network & Emergency Cases
+      document.getElementById('val-emergencyCases').innerText = '12';
+      document.getElementById('val-distNodes').innerText = '35/35';
+      document.getElementById('val-distNodes').className = 'font-mono font-medium text-emerald-600';
+      document.getElementById('val-droneFeeds').innerText = '08 Active';
+      document.getElementById('val-droneFeeds').className = 'font-mono font-medium text-teal-600';
+      document.getElementById('val-commHealth').innerText = '99.8%';
+      document.getElementById('val-commHealth').className = 'font-mono font-medium text-emerald-600';
+
+      // Populate Overview Reports Table
+      const reportsBody = document.getElementById('overview-reports-body');
+      reportsBody.innerHTML = mockReports.map(r => `
+        <tr class="hover:bg-slate-50 transition-colors">
+          <td class="px-4 py-2.5 font-semibold text-slate-800">${r.name}</td>
+          <td class="px-4 py-2.5 text-slate-600">${r.location}</td>
+          <td class="px-4 py-2.5 text-slate-600">${r.source}</td>
+          <td class="px-4 py-2.5 text-slate-500 font-mono text-[11px]">${r.date}</td>
+          <td class="px-4 py-2.5"><span class="bg-emerald-100 text-emerald-800 text-[10px] font-bold px-2 py-0.5 rounded border border-emerald-300">${r.status}</span></td>
+        </tr>
+      `).join('');
+
+      // Populate Rescue Queue
+      const queueBody = document.getElementById('overview-queue-body');
+      queueBody.innerHTML = mockPriorities.map(p => `
+        <div class="p-3 hover:bg-slate-50 transition-colors">
+          <div class="flex justify-between items-start">
+            <div class="font-bold text-slate-900 text-xs">${p.location}</div>
+            <span class="bg-red-100 text-red-800 text-[9px] font-bold px-1.5 py-0.5 rounded">${p.level}</span>
+          </div>
+          <div class="text-[11px] text-red-700 font-semibold mt-1">${p.peopleDetected} people stranded</div>
+          <div class="text-[10px] text-slate-500 mt-1 bg-slate-50 p-1.5 rounded border border-slate-200">${p.reason}</div>
+        </div>
+      `).join('');
+
+      // Populate System Log
+      const logBody = document.getElementById('overview-log-body');
+      logBody.innerHTML = mockActivities.map(a => `
+        <div class="border-l-2 border-teal-600 pl-3">
+          <div class="font-bold text-slate-800 text-xs">${a.description}</div>
+          <div class="text-[10px] font-mono text-slate-400 mt-0.5">${a.timestamp}</div>
+        </div>
+      `).join('');
+
+      // Populate Victim Detection Cards
+      const victimContainer = document.getElementById('victim-list-container');
+      victimContainer.innerHTML = mockPriorities.map(p => `
+        <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm space-y-3">
+          <div class="flex justify-between items-start">
+            <div>
+              <span class="font-mono text-[10px] text-slate-400 font-bold">${p.id}</span>
+              <h4 class="font-bold text-slate-900 text-sm">${p.location}</h4>
+            </div>
+            <span class="bg-red-100 text-red-800 text-xs font-bold px-2 py-0.5 rounded border border-red-200">${p.level}</span>
+          </div>
+          <div class="text-xs text-slate-600">${p.reason}</div>
+          <button onclick="alert('Dispatch order sent to NDRF Team #4 for ${p.id}')" class="w-full bg-teal-700 hover:bg-teal-800 text-white text-xs font-semibold py-2 rounded shadow">
+            Dispatch NDRF Rescue Team
+          </button>
+        </div>
+      `).join('');
+
+      // Populate Priority Table
+      const priorityBody = document.getElementById('priority-table-body');
+      priorityBody.innerHTML = mockPriorities.map(p => `
+        <tr class="hover:bg-slate-50 transition-colors">
+          <td class="px-4 py-3 font-mono font-bold text-slate-700">${p.id}</td>
+          <td class="px-4 py-3 font-semibold text-slate-900">${p.location}</td>
+          <td class="px-4 py-3 font-mono text-red-700 font-bold">${p.peopleDetected}</td>
+          <td class="px-4 py-3 font-mono">0.89 (High)</td>
+          <td class="px-4 py-3"><span class="bg-red-100 text-red-800 text-xs font-bold px-2 py-0.5 rounded border border-red-200">${p.level}</span></td>
+          <td class="px-4 py-3 text-right">
+            <button onclick="alert('Assigning team to ${p.id}')" class="bg-teal-700 text-white text-xs px-3 py-1 rounded hover:bg-teal-800">Assign Team</button>
+          </td>
+        </tr>
+      `).join('');
+
+      // Populate Full Reports List
+      const reportsFullList = document.getElementById('reports-full-list');
+      reportsFullList.innerHTML = mockReports.map(r => `
+        <div class="p-4 border border-slate-200 rounded-lg flex justify-between items-center bg-slate-50">
+          <div>
+            <div class="font-mono text-xs text-slate-400">${r.id}</div>
+            <div class="font-bold text-slate-900 text-sm">${r.name}</div>
+            <div class="text-xs text-slate-500 mt-1">${r.location} • ${r.source} • ${r.date}</div>
+          </div>
+          <button onclick="alert('Opening official bulletin for ${r.id}')" class="bg-teal-700 text-white text-xs font-semibold px-4 py-2 rounded hover:bg-teal-800 shadow">
+            Open SEOC Bulletin
+          </button>
+        </div>
+      `).join('');
+
+      // Draw Canvases
+      drawGisMap();
+      drawDroneFeed();
+      drawRouteMap();
+    }
+
+    // Draw GIS Map Canvas Engine
+    function drawGisMap() {
+      const canvas = document.getElementById('gis-canvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      const rect = canvas.getBoundingClientRect();
+      canvas.width = rect.width * window.devicePixelRatio;
+      canvas.height = rect.height * window.devicePixelRatio;
+      ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+
+      const w = rect.width;
+      const h = rect.height;
+
+      // Dark Canvas Background
+      ctx.fillStyle = '#0f172a';
+      ctx.fillRect(0, 0, w, h);
+
+      // Draw Grid Lines
+      ctx.strokeStyle = 'rgba(51, 65, 85, 0.4)';
+      ctx.lineWidth = 1;
+      for (let x = 0; x < w; x += 40) {
+        ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, h); ctx.stroke();
+      }
+      for (let y = 0; y < h; y += 40) {
+        ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke();
+      }
+
+      if (isDataLoaded) {
+        // Draw Brahmaputra River Channel
+        ctx.beginPath();
+        ctx.moveTo(0, h * 0.4);
+        ctx.bezierCurveTo(w * 0.3, h * 0.35, w * 0.6, h * 0.55, w, h * 0.45);
+        ctx.lineTo(w, h * 0.65);
+        ctx.bezierCurveTo(w * 0.6, h * 0.75, w * 0.3, h * 0.55, 0, h * 0.6);
+        ctx.closePath();
+        ctx.fillStyle = 'rgba(14, 116, 144, 0.4)';
+        ctx.fill();
+        ctx.strokeStyle = 'rgba(6, 182, 212, 0.8)';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+
+        // Draw Inundated Flood Polygons
+        ctx.beginPath();
+        ctx.arc(w * 0.35, h * 0.45, 80, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(2, 132, 199, 0.35)';
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.arc(w * 0.65, h * 0.52, 110, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(2, 132, 199, 0.35)';
+        ctx.fill();
+
+        // Draw Critical Victim Markers (Red Pulsing)
+        const victimCoords = [
+          { x: w * 0.35, y: h * 0.42, label: 'VIC-17' },
+          { x: w * 0.62, y: h * 0.48, label: 'VIC-18' },
+          { x: w * 0.45, y: h * 0.58, label: 'VIC-19' }
+        ];
+
+        victimCoords.forEach(v => {
+          ctx.beginPath();
+          ctx.arc(v.x, v.y, 8, 0, Math.PI * 2);
+          ctx.fillStyle = '#dc2626';
+          ctx.fill();
+          ctx.strokeStyle = '#ffffff';
+          ctx.lineWidth = 2;
+          ctx.stroke();
+
+          ctx.fillStyle = '#ffffff';
+          ctx.font = '10px JetBrains Mono';
+          ctx.fillText(v.label, v.x + 12, v.y + 4);
+        });
+
+        // Map Title overlay
+        ctx.fillStyle = '#0d9488';
+        ctx.font = 'bold 11px JetBrains Mono';
+        ctx.fillText('LIVE SAR OVERLAY • BRAHMAPUTRA BASIN SECTOR 4', 16, 28);
+      }
+    }
+
+    // Draw Drone Feed Simulation
+    function drawDroneFeed() {
+      const canvas = document.getElementById('drone-canvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      const rect = canvas.getBoundingClientRect();
+      canvas.width = rect.width * window.devicePixelRatio;
+      canvas.height = rect.height * window.devicePixelRatio;
+      ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+
+      const w = rect.width;
+      const h = rect.height;
+
+      // Dark Video Simulation Background
+      ctx.fillStyle = '#020617';
+      ctx.fillRect(0, 0, w, h);
+
+      // Water Surface Simulation
+      ctx.fillStyle = '#0f172a';
+      ctx.fillRect(0, h * 0.3, w, h * 0.7);
+
+      // HUD Crosshair
+      ctx.strokeStyle = 'rgba(20, 184, 166, 0.4)';
+      ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(w / 2 - 20, h / 2); ctx.lineTo(w / 2 + 20, h / 2); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(w / 2, h / 2 - 20); ctx.lineTo(w / 2, h / 2 + 20); ctx.stroke();
+
+      if (isDataLoaded) {
+        // AI Bounding Box 1: Victim Group
+        ctx.strokeStyle = '#dc2626';
+        ctx.lineWidth = 2;
+        ctx.strokeRect(w * 0.3, h * 0.4, 90, 60);
+        ctx.fillStyle = '#dc2626';
+        ctx.fillRect(w * 0.3, h * 0.4 - 18, 120, 18);
+        ctx.fillStyle = '#ffffff';
+        ctx.font = 'bold 10px JetBrains Mono';
+        ctx.fillText('PERSON_GROUP 94%', w * 0.3 + 4, h * 0.4 - 5);
+
+        // AI Bounding Box 2: Rescue Boat
+        ctx.strokeStyle = '#0d9488';
+        ctx.lineWidth = 2;
+        ctx.strokeRect(w * 0.6, h * 0.55, 110, 50);
+        ctx.fillStyle = '#0d9488';
+        ctx.fillRect(w * 0.6, h * 0.55 - 18, 110, 18);
+        ctx.fillStyle = '#ffffff';
+        ctx.font = 'bold 10px JetBrains Mono';
+        ctx.fillText('BOAT_NDRF 98%', w * 0.6 + 4, h * 0.55 - 5);
+      }
+    }
+
+    // Draw Route Map
+    function drawRouteMap() {
+      const canvas = document.getElementById('route-canvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      const rect = canvas.getBoundingClientRect();
+      canvas.width = rect.width * window.devicePixelRatio;
+      canvas.height = rect.height * window.devicePixelRatio;
+      ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+
+      const w = rect.width;
+      const h = rect.height;
+
+      ctx.fillStyle = '#0f172a';
+      ctx.fillRect(0, 0, w, h);
+
+      // Draw Path Line
+      ctx.strokeStyle = '#0284c7';
+      ctx.lineWidth = 4;
+      ctx.beginPath();
+      ctx.moveTo(w * 0.1, h * 0.8);
+      ctx.lineTo(w * 0.4, h * 0.4);
+      ctx.lineTo(w * 0.8, h * 0.3);
+      ctx.stroke();
+
+      // Waypoints
+      ctx.fillStyle = '#10b981';
+      ctx.beginPath(); ctx.arc(w * 0.1, h * 0.8, 8, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = '#dc2626';
+      ctx.beginPath(); ctx.arc(w * 0.8, h * 0.3, 8, 0, Math.PI * 2); ctx.fill();
+    }
+
+    // Window Resize Handler for Canvases
+    window.addEventListener('resize', () => {
+      if (currentTab === 'overview' && isDataLoaded) drawGisMap();
+      if (currentTab === 'drone-analysis') drawDroneFeed();
+      if (currentTab === 'rescue-routes') drawRouteMap();
+    });
+
+    // Initial Load Setup
+    window.addEventListener('DOMContentLoaded', () => {
+      setLanguage(currentLang);
+    });
+  </script>
+</body>
+</html>
